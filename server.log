@@ -1,0 +1,10 @@
+[dotenv@17.3.1] injecting env (1) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+✅ Backend proxy running at http://localhost:3000
+   - Bus Arrival: http://localhost:3000/api/busArrival?BusStopCode=83139
+   - Bus Routes: http://localhost:3000/api/busRoutes?ServiceNo=10
+Fetching bus stops metadata from LTA...
+Parsing bus_stops.xml...
+✅ Parsed 5878 mappings with coordinates from XML
+Fetching bus routes data...
+✅ Loaded 5878 bus stops into cache (LTA + XML)
+✅ Loaded 26564 bus route segments into cache
