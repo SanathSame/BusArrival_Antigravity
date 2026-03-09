@@ -3,6 +3,6 @@ import react from '@vitejs/plugin-react'
 
 // Simple Vite config without any proxy
 export default defineConfig({
-  base: './',
+  base: '/BusArrival_Antigravity/',
   plugins: [react()],
 })
