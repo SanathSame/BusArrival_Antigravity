@@ -4,6 +4,7 @@ import SearchBar from './components/SearchBar';
 import TabSwitcher from './components/TabSwitcher';
 import BusStopResults from './components/BusStopResults';
 import BusRouteResults from './components/BusRouteResults';
+import JourneyPlanner from './components/JourneyPlanner';
 import { fetchBusArrivals, fetchBusRoutes, fetchBusStops } from './services/api';
 import { AlertCircle, BusFront } from 'lucide-react';
 
@@ -40,14 +41,10 @@ function App() {
         let finalCode = query;
         // If query is not a 5-digit code, try to find it by name
         if (!/^\d{5}$/.test(query)) {
-          // Try exact match first
           let match = busStops.find(s => s.Description.toLowerCase() === query.toLowerCase());
-
-          // If no exact match, try partial match
           if (!match) {
             match = busStops.find(s => s.Description.toLowerCase().includes(query.toLowerCase()));
           }
-
           if (match) {
             finalCode = match.BusStopCode;
             setSearchQuery(match.Description);
@@ -55,7 +52,6 @@ function App() {
             throw new Error(`Bus stop "${query}" not found. Try searching by code if name fails.`);
           }
         }
-
         const result = await fetchBusArrivals(finalCode);
         setData(result);
         setSearchType('stop');
@@ -82,63 +78,71 @@ function App() {
     setSearchType(null);
   };
 
+  const isJourneyTab = activeTab === 'journey';
+
   return (
     <div className="App">
       <header>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginBottom: '0.5rem' }}>
           <BusFront size={40} color="var(--primary)" />
-          <h1>SG Bus Arrival</h1>
+          <h1>BuSG</h1>
         </div>
         <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem' }}>
-          Real-time Singapore bus timings and routes
+          Real-time Singapore bus timings, routes, and journey planning
         </p>
       </header>
 
       <main>
         <TabSwitcher activeTab={activeTab} onTabChange={handleTabChange} />
 
-        <SearchBar
-          onSearch={handleSearch}
-          loading={loading}
-          activeTab={activeTab}
-          busStops={busStops}
-        />
+        {/* Journey Planner handles its own UI */}
+        {isJourneyTab && <JourneyPlanner />}
 
-        {error && (
-          <div className="card animate-fade-in" style={{ border: '1px solid var(--danger)', background: 'rgba(239, 68, 68, 0.1)', marginBottom: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--danger)' }}>
-              <AlertCircle size={20} />
-              <strong>Error:</strong> {error}
-            </div>
-          </div>
-        )}
+        {/* Bus Stop Arrivals + Bus Routes share the SearchBar */}
+        {!isJourneyTab && (
+          <>
+            <SearchBar
+              onSearch={handleSearch}
+              loading={loading}
+              activeTab={activeTab}
+              busStops={busStops}
+            />
 
-        {loading && (
-          <div style={{ textAlign: 'center', margin: '3rem 0' }}>
-            <div className="loader" style={{
-              width: '40px',
-              height: '40px',
-              border: '4px solid var(--glass-border)',
-              borderTopColor: 'var(--primary)',
-              borderRadius: '50%',
-              margin: '0 auto',
-              animation: 'spin 1s linear infinite'
-            }}></div>
-            <p style={{ marginTop: '1rem', color: 'var(--text-muted)' }}>Fetching live data...</p>
-          </div>
-        )}
+            {error && (
+              <div className="card animate-fade-in" style={{ border: '1px solid var(--danger)', background: 'rgba(239, 68, 68, 0.1)', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--danger)' }}>
+                  <AlertCircle size={20} />
+                  <strong>Error:</strong> {error}
+                </div>
+              </div>
+            )}
 
-        {!loading && !error && searchType === 'stop' && (
-          <BusStopResults data={data} query={searchQuery} busStops={busStops} />
-        )}
+            {loading && (
+              <div style={{ textAlign: 'center', margin: '3rem 0' }}>
+                <div className="loader" style={{
+                  width: '40px', height: '40px',
+                  border: '4px solid var(--glass-border)',
+                  borderTopColor: 'var(--primary)',
+                  borderRadius: '50%', margin: '0 auto',
+                  animation: 'spin 1s linear infinite'
+                }} />
+                <p style={{ marginTop: '1rem', color: 'var(--text-muted)' }}>Fetching live data...</p>
+              </div>
+            )}
 
-        {!loading && !error && searchType === 'route' && (
-          <BusRouteResults serviceNo={searchQuery} routeData={data} busStops={busStops} />
+            {!loading && !error && searchType === 'stop' && (
+              <BusStopResults data={data} query={searchQuery} busStops={busStops} />
+            )}
+
+            {!loading && !error && searchType === 'route' && (
+              <BusRouteResults serviceNo={searchQuery} routeData={data} busStops={busStops} />
+            )}
+          </>
         )}
       </main>
 
       <footer style={{ marginTop: '4rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-        <p>Data provided by LTA DataMall</p>
+        <p>Data provided by LTA DataMall & OneMap</p>
       </footer>
     </div>
   );

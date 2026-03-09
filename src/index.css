@@ -29,9 +29,9 @@ body {
 }
 
 #root {
-  max-width: 800px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 2rem 1.5rem;
 }
 
 h1 {
@@ -94,7 +94,6 @@ button {
   transform: translateY(-1px);
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -104,6 +103,12 @@ button {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -194,7 +199,7 @@ button {
   margin-top: 0.75rem;
   max-height: 250px;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 2000;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(16px);
 }
@@ -229,4 +234,293 @@ button {
   padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
   font-family: monospace;
+}
+
+/* ─── Bus Stop Arrivals Two-Column Layout ─── */
+.arrivals-layout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.arrivals-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.arrivals-right {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.arrivals-right .map-container {
+  height: calc(100vh - 220px);
+  min-height: 420px;
+  max-height: 800px;
+}
+
+.arrivals-right .leaflet-container {
+  height: 100% !important;
+}
+
+/* Stop header */
+.stop-header-card {
+  border-left: 4px solid var(--primary);
+}
+
+.stop-icon-bg {
+  background: rgba(99, 102, 241, 0.1);
+  padding: 10px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.stop-title {
+  font-size: 1.1rem;
+  color: var(--text-main);
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.stop-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.stop-code-pill {
+  background: rgba(34, 211, 238, 0.12);
+  color: var(--accent);
+  border-radius: 6px;
+  padding: 1px 8px;
+  font-family: monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.wab-badge {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--primary);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Services list */
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.service-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+}
+
+.service-no-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  text-align: center;
+}
+
+.service-number {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.service-operator {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.buses-col {
+  display: flex;
+  gap: 0.75rem;
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.bus-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 64px;
+}
+
+.arrival-chip {
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--text-main);
+  min-width: 58px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.arrival-chip.imminent {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.arrival-chip.na {
+  color: var(--text-muted);
+  border-color: rgba(255, 255, 255, 0.06);
+  font-size: 0.85rem;
+}
+
+.bus-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.load-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.bus-type {
+  font-size: 0.63rem;
+  color: var(--text-muted);
+}
+
+.bus-wab {
+  font-size: 0.7rem;
+  color: var(--primary);
+}
+
+.empty-msg {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem;
+}
+
+/* Responsive: stack on narrow screens */
+@media (max-width: 900px) {
+
+  .arrivals-layout,
+  .route-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .arrivals-right,
+  .route-right {
+    position: static;
+  }
+
+  .arrivals-right .map-container,
+  .route-right .map-container {
+    height: 300px;
+  }
+}
+
+/* ─── Bus Route Two-Column Layout ─── */
+.route-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.route-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.route-right {
+  position: sticky;
+  top: 1.5rem;
+  height: calc(100vh - 220px);
+  min-height: 450px;
+  max-height: 860px;
+}
+
+.route-right .map-container {
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.route-right .leaflet-container {
+  height: 100% !important;
+}
+
+/* ─── Journey Planner Two-Column Layout ─── */
+.journey-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.journey-left {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 10;
+}
+
+.journey-right {
+  position: sticky;
+  top: 1.5rem;
+  height: calc(100vh - 200px);
+  min-height: 450px;
+  max-height: 860px;
+}
+
+.journey-right .map-container {
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.journey-right .leaflet-container {
+  height: 100% !important;
+}
+
+@media (max-width: 900px) {
+  .journey-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-left {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .journey-right {
+    position: static;
+    height: 340px;
+  }
 }

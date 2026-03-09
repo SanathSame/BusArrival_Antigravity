@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, RotateCcw } from 'lucide-react';
+import { MapPin, RotateCcw, Navigation } from 'lucide-react';
 
 const TabSwitcher = ({ activeTab, onTabChange }) => {
     return (
@@ -8,19 +8,22 @@ const TabSwitcher = ({ activeTab, onTabChange }) => {
                 className={`tab ${activeTab === 'arrivals' ? 'active' : ''}`}
                 onClick={() => onTabChange('arrivals')}
             >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <MapPin size={18} />
-                    Bus Stop Arrivals
-                </div>
+                <MapPin size={18} />
+                Bus Stop Arrivals
             </div>
             <div
                 className={`tab ${activeTab === 'routes' ? 'active' : ''}`}
                 onClick={() => onTabChange('routes')}
             >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <RotateCcw size={18} />
-                    Bus Routes
-                </div>
+                <RotateCcw size={18} />
+                Bus Routes
+            </div>
+            <div
+                className={`tab ${activeTab === 'journey' ? 'active' : ''}`}
+                onClick={() => onTabChange('journey')}
+            >
+                <Navigation size={18} />
+                Journey Planner
             </div>
         </div>
     );
