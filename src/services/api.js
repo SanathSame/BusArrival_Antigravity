@@ -3,7 +3,9 @@
  * to bypass CORS restrictions.
  */
 
-const BACKEND_URL = 'http://localhost:3000/api';
+const BACKEND_URL = import.meta.env.PROD
+    ? 'https://busarrival-antigravity.onrender.com/api' // Replace with your actual Render backend URL once deployed
+    : 'http://localhost:3000/api';
 
 /**
  * Fetch bus arrival times for a specific bus stop via local backend.
