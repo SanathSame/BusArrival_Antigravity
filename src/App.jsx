@@ -4,6 +4,7 @@ import SearchBar from './components/SearchBar';
 import TabSwitcher from './components/TabSwitcher';
 import BusStopResults from './components/BusStopResults';
 import BusRouteResults from './components/BusRouteResults';
+import NearestBusStops from './components/NearestBusStops';
 import JourneyPlanner from './components/JourneyPlanner';
 import { fetchBusArrivals, fetchBusRoutes, fetchBusStops } from './services/api';
 import { AlertCircle, BusFront } from 'lucide-react';
@@ -85,7 +86,7 @@ function App() {
       <header>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginBottom: '0.5rem' }}>
           <BusFront size={40} color="var(--primary)" />
-          <h1>BuSG</h1>
+          <h1>JourneySG</h1>
         </div>
         <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem' }}>
           Real-time Singapore bus timings, routes, and journey planning
@@ -128,6 +129,10 @@ function App() {
                 }} />
                 <p style={{ marginTop: '1rem', color: 'var(--text-muted)' }}>Fetching live data...</p>
               </div>
+            )}
+
+            {!loading && !error && !searchType && activeTab === 'arrivals' && busStops.length > 0 && (
+              <NearestBusStops busStops={busStops} />
             )}
 
             {!loading && !error && searchType === 'stop' && (
